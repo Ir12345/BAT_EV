@@ -44,6 +44,3 @@ Element: State conf;confirmation.php;id_state_conf;(10, 43);(746, 346)
 Element: Label Terms? conf;confirmation.php;id_f_label_terms_conf;(69, 23);(321, 395)
 Element: Terms conf;confirmation.php;id_terms_conf;(10, 43);(321, 426)
 Element: Button Back;confirmation.php;id_back_button;(121, 37);(746, 492)
-
-
-
