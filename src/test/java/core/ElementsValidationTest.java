@@ -1,5 +1,6 @@
 package core;
 
+import org.testng.annotations.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import java.io.*;
@@ -20,12 +21,16 @@ import java.lang.reflect.Method;
 public class ElementsValidationTest implements ITest {
        static WebDriver driver;
        static final String baseUrl = "http://alex.academy/exercises/signup/v1/";
+       
        //String csvFile = "./src/resources/test_data/csv/bat/elements_validation_chrome.csv";
        //String csvFile = "./src/resources/test_data/csv/bat/elements_validation_firefox.csv";
-       String csvFile = "./src/resources/test_data/csv/bat/elements_validation_safari.csv";
+       //String csvFile = "./src/resources/test_data/csv/bat/elements_validation_safari.csv";
+       String csvFile = "./src/resources/test_data/csv/bat/elements_validation.csv";
        private String test_name = "";  
        public String getTestName() {return test_name;}
        private void setTestName(String a) {test_name = a;}
+       
+       
        @BeforeMethod(alwaysRun = true)
        public void bm(Method method, Object[] parameters) {
               setTestName(method.getName());
@@ -47,13 +52,17 @@ public class ElementsValidationTest implements ITest {
 	@Test(dataProvider = "dp")
        public void test(String tc_id, String url, String element_id, String element_size, String element_location) {
  
-              getDriver("safari", url);
+              getDriver("chrome", url);
               assertThat(isPresent(element_id, driver), equalTo(true));
-              assertThat(size(element_id, driver), equalTo(element_size));
-              assertThat(location(element_id, driver), equalTo(element_location));}
- 
-       @AfterMethod
-       public void am() {driver.quit();}
+              //assertThat(size(element_id, driver), equalTo(element_size));
+              assertThat(sizeOffSet(element_id, element_size, 20, 20, driver), equalTo(true));
+              //assertThat(location(element_id, driver), equalTo(element_location));}
+              assertThat(locationOffSet(element_id, element_location, 20, 20, driver), equalTo(true));}
+       
+              @AfterMethod
+              public void am() {driver.quit();}
+              
+              
  
 	public static void getDriver(String browser, String url) {
 					Logger logger = Logger.getLogger("");
@@ -87,11 +96,37 @@ public class ElementsValidationTest implements ITest {
              else {return false;}}
   
 	public static String size(String element_id, WebDriver wd) {
-              driver = wd;
-              String n = null;
-              if (!driver.findElements(By.id(element_id)).isEmpty()) {
-                   String s = driver.findElement(By.id(element_id)).getSize().toString(); return s;}
-             else {return n;}}
+        driver = wd;
+        String n = null;
+        if (!driver.findElements(By.id(element_id)).isEmpty()) {
+             String s = driver.findElement(By.id(element_id)).getSize().toString(); return s;}
+       else {return n;}}
+	
+	public static boolean sizeOffSet(String element_id, String element_size, int w_offset, int h_offset, WebDriver wd) {
+		driver = wd;
+	if (!driver.findElements(By.id(element_id)).isEmpty()) {
+			
+            int w_act = driver.findElement(By.id(element_id)).getSize().getWidth(); 
+            int h_act = driver.findElement(By.id(element_id)).getSize().getHeight();
+            
+            int w_exp = Integer.parseInt(element_size.replaceAll("\\s","")
+            										 .replaceAll("\\(","")
+            										 .replaceAll("\\)","")
+            										 .split(",")[0]);
+            										 
+            int h_exp = Integer.parseInt(element_size.replaceAll("\\s","")
+                    								 .replaceAll("\\(","")
+                    								 .replaceAll("\\)","")
+                    								 .split(",")[1]);
+    if (
+            	(w_act >= w_exp - w_offset && w_act <= w_exp + w_offset) &&
+            	(h_act >= h_exp - h_offset && h_act <= h_exp + h_offset)
+            		)
+            {return true;}
+    else {return false;}}      
+           
+    else {return false;}}
+		
   
 	public static String location(String element_id, WebDriver wd) {
               driver = wd;
@@ -99,5 +134,30 @@ public class ElementsValidationTest implements ITest {
               if (!driver.findElements(By.id(element_id)).isEmpty()) {
                   String l = driver.findElement(By.id(element_id)).getLocation().toString(); return l;}
              else {return n;}}
+	
+	public static boolean locationOffSet(String element_id, String element_location, int x_offset, int y_offset, WebDriver wd) {
+		driver = wd;
+	if (!driver.findElements(By.id(element_id)).isEmpty()) {
+			
+            int x_act = driver.findElement(By.id(element_id)).getLocation().getX(); 
+            int y_act = driver.findElement(By.id(element_id)).getLocation().getY();
+            
+            int x_exp = Integer.parseInt(element_location.replaceAll("\\s","")
+            										 .replaceAll("\\(","")
+            										 .replaceAll("\\)","")
+            										 .split(",")[0]);
+            										 
+            int y_exp = Integer.parseInt(element_location.replaceAll("\\s","")
+                    								 .replaceAll("\\(","")
+                    								 .replaceAll("\\)","")
+                    								 .split(",")[1]);
+    if (
+            	(x_act >= x_exp - x_offset && x_act <= x_exp + x_offset) &&
+            	(y_act >= y_exp - y_offset && y_act <= y_exp + y_offset)
+            		)
+            {return true;}
+    else {return false;}}      
+           
+    else {return false;}}
 }
  
