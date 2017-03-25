@@ -52,12 +52,12 @@ public class ElementsValidationTest implements ITest {
 	@Test(dataProvider = "dp")
        public void test(String tc_id, String url, String element_id, String element_size, String element_location) {
  
-              getDriver("chrome", url);
+              getDriver("safari", url);
               assertThat(isPresent(element_id, driver), equalTo(true));
               //assertThat(size(element_id, driver), equalTo(element_size));
-              assertThat(sizeOffSet(element_id, element_size, 20, 20, driver), equalTo(true));
+              assertThat(sizeOffSet(element_id, element_size, 50, 50, driver), equalTo(true));
               //assertThat(location(element_id, driver), equalTo(element_location));}
-              assertThat(locationOffSet(element_id, element_location, 20, 20, driver), equalTo(true));}
+              assertThat(locationOffSet(element_id, element_location, 50, 50, driver), equalTo(true));}
        
               @AfterMethod
               public void am() {driver.quit();}
